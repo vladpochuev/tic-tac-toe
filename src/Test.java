@@ -12,11 +12,18 @@ public class Test {
 
         for(boolean gameStatus = true; gameStatus;){
             while(true){    ///////////////////////////// Player's Turn
-                System.out.println("Ввести комірку");
+                System.out.println("Введіть номер комірки(1-9)");
                 int i = sc.nextInt();
+
+                if(i<1||i>9){
+                    System.out.println("Неправильний номер комірки");
+                    printArray(array);
+                    continue;
+                }
 
                 if(array[i-1]==0||array[i-1]==1){
                     System.out.println("Комірка зайнята");
+                    printArray(array);
                 } else {
                     array[i-1] = 1;
                     printArray(array);
@@ -55,33 +62,56 @@ public class Test {
     }
     public static char checkStatus(double[] array) {
         char k = 0;
+        boolean draw = false;
+
+
         for (int i = 0; i < array.length; i = i + 3) {         ///////////// Strings
             if (array[i] == array[1 + i] && array[1 + i] == array[2 + i]) {
                 k = endGame(array[i]);
             }
         }
-        for (int i = 0; i < Math.pow(array.length,0.5); i++) {  //////////// Column
-            if(array[i]==array[3+i]&array[3+i]==array[6+i]){
-                k = endGame(array[i]);
+        if (k==0) {
+            for (int i = 0; i < Math.pow(array.length,0.5); i++) {  //////////// Column
+                if(array[i]==array[3+i]&array[3+i]==array[6+i]){
+                    k = endGame(array[i]);
+                }
             }
         }
 
-        if(array[0]==array[4]&&array[4]==array[8]){
-            k = endGame(array[4]);
+        if (k==0) {
+            if(array[0]==array[4]&&array[4]==array[8]){
+                k = endGame(array[4]);
+            }
         }
-        if(array[2]==array[4]&&array[4]==array[6]){
-            k = endGame(array[4]);
+        if (k==0) {
+            if(array[2]==array[4]&&array[4]==array[6]){
+                k = endGame(array[4]);
+            }
+        }
+
+        for (double v : array) {
+            if(v != 0 && v != 1){
+                draw = true;
+                break;
+            }
+        }
+
+        if(!draw && k==0){
+            k = endGame('-');
         }
 
         return k;
     }
     public static char endGame(double v){
         if(v==1){
-            System.out.println("x перем");
+            System.out.println("Перемога x");
         return 'x';
-        }else {
-            System.out.println("o перем");
+        }else if(v==0) {
+            System.out.println("Перемога o");
             return 'o';
+        } else {
+            System.out.println("Нічія");
+            return '-';
         }
     }
     public static void printArray(double[] array){
